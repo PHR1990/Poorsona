@@ -37,6 +37,8 @@ object Window {
                 throw Error("Unknown scene");
             }
         }
+
+        currentScene.init();
     }
 
     fun run() {
