@@ -1,6 +1,8 @@
 package com.phr.core
 
+import com.phr.renderer.Camera
 import com.phr.renderer.Shader
+import org.joml.Vector2f
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL20.*
 import org.lwjgl.opengl.GL30.glBindVertexArray
@@ -20,10 +22,10 @@ class LevelEditorScene : Scene() {
 
     var vertexArray: FloatArray = floatArrayOf(
         /*Position              RGB A */
-        0.5f, -0.5f, 0.0f,      1.0f, 0.0f, 1.0f, 1.0f, // bottom right
-        -0.5f, 0.5f, 0.0f,      0.0f, 1.0f, 1.0f, 1.0f, // top left
-        0.5f, 0.5f, 0.0f,       1.0f, 0.0f, 1.0f, 1.0f, // top right
-        -0.5f, -0.5f, 0.0f,     1.0f, 1.0f, 1.0f, 1.0f, //bottom left
+        100.5f, 0.5f, 0.0f,      1.0f, 0.0f, 1.0f, 1.0f, // bottom right
+        0.5f, 100.5f, 0.0f,      0.0f, 1.0f, 1.0f, 1.0f, // top left
+        100.5f, 100.5f, 0.0f,       1.0f, 0.0f, 1.0f, 1.0f, // top right
+        0.5f, 0.5f, 0.0f,     1.0f, 1.0f, 1.0f, 1.0f, //bottom left
     );
 
     var elementArray: IntArray = intArrayOf(
@@ -38,6 +40,8 @@ class LevelEditorScene : Scene() {
     override fun init() {
 
         activeShader.compileAndLink();
+
+        camera = Camera(Vector2f(-200f, -300f));
 
         vertexArrayObjectId = glGenVertexArrays();
         glBindVertexArray(vertexArrayObjectId);
@@ -76,8 +80,11 @@ class LevelEditorScene : Scene() {
 
     override fun update(elapsedTimeInSeconds: Float) {
 
-        activeShader.use();
+        camera.position.x -= elapsedTimeInSeconds * 5f;
 
+        activeShader.use();
+        activeShader.uploadMat4f("uProjectionMatrix", camera.getProjectionMatrix());
+        activeShader.uploadMat4f("uViewMatrix", camera.getViewMatrix());
         // bindings
         glBindVertexArray(vertexArrayObjectId);
 

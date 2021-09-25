@@ -1,5 +1,7 @@
 package com.phr.renderer
 
+import org.joml.Matrix4f
+import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL20
 import org.lwjgl.opengl.GL20.*
 import java.io.IOException
@@ -7,8 +9,6 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 class Shader constructor(filePath: String) {
-
-    private var filePath: String = filePath;
 
     private var shaderProgramId = 0;
 
@@ -102,6 +102,15 @@ class Shader constructor(filePath: String) {
 
     fun detach(): Unit {
         glUseProgram(0);
+    }
+
+    fun uploadMat4f(varName: String, mat4Value: Matrix4f) {
+
+        val varLocation = glGetUniformLocation(shaderProgramId, varName);
+        val matBuffer = BufferUtils.createFloatBuffer(16);
+        mat4Value.get(matBuffer)
+        glUniformMatrix4fv(varLocation, false, matBuffer);
+
     }
 
 }
