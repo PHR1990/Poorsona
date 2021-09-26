@@ -1,6 +1,6 @@
 package com.phr.renderer
 
-import org.joml.Matrix4f
+import org.joml.*
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL20
 import org.lwjgl.opengl.GL20.*
@@ -11,6 +11,8 @@ import java.nio.file.Paths
 class Shader constructor(filePath: String) {
 
     private var shaderProgramId = 0;
+
+    private var beingUsed: Boolean = false;
 
     private lateinit var vertexSource:String;
     private lateinit var fragmentSource: String;
@@ -97,20 +99,65 @@ class Shader constructor(filePath: String) {
     }
 
     fun use() {
-        glUseProgram(shaderProgramId);
+        if (!beingUsed) {
+            glUseProgram(shaderProgramId);
+            beingUsed = true;
+        }
     }
 
     fun detach(): Unit {
         glUseProgram(0);
+        beingUsed = false;
     }
 
-    fun uploadMat4f(varName: String, mat4Value: Matrix4f) {
+    fun uploadMat4f(variableName: String, mat4Value: Matrix4f) {
 
-        val varLocation = glGetUniformLocation(shaderProgramId, varName);
+        val variableLocation = glGetUniformLocation(shaderProgramId, variableName);
+        use();
         val matBuffer = BufferUtils.createFloatBuffer(16);
         mat4Value.get(matBuffer)
-        glUniformMatrix4fv(varLocation, false, matBuffer);
+        glUniformMatrix4fv(variableLocation, false, matBuffer);
 
+    }
+
+    fun uploadMat3f(variableName: String, mat3Value: Matrix3f) {
+
+        val variableLocation = glGetUniformLocation(shaderProgramId, variableName);
+        use();
+        val matBuffer = BufferUtils.createFloatBuffer(9);
+        mat3Value.get(matBuffer)
+        glUniformMatrix3fv(variableLocation, false, matBuffer);
+
+    }
+
+    fun uploadVec4f(variableName: String, vector4f: Vector4f) {
+        val variableLocation = glGetUniformLocation(shaderProgramId, variableName);
+        use();
+        glUniform4f(variableLocation, vector4f.x, vector4f.y, vector4f.z, vector4f.w);
+    }
+
+    fun uploadVec3f(variableName: String, vector3f: Vector3f) {
+        val variableLocation = glGetUniformLocation(shaderProgramId, variableName);
+        use();
+        glUniform3f(variableLocation, vector3f.x, vector3f.y, vector3f.z);
+    }
+
+    fun uploadVec2f(variableName: String, vector2f: Vector2f) {
+        val variableLocation = glGetUniformLocation(shaderProgramId, variableName);
+        use();
+        glUniform2f(variableLocation, vector2f.x, vector2f.y);
+    }
+
+    fun uploadFloat(variableName: String, value: Float) {
+        val variableLocation = glGetUniformLocation(shaderProgramId, variableName);
+        use();
+        glUniform1f(variableLocation, value);
+    }
+
+    fun uploadInt(variableName: String, value: Int) {
+        val variableLocation = glGetUniformLocation(shaderProgramId, variableName);
+        use();
+        glUniform1i(variableLocation, value);
     }
 
 }

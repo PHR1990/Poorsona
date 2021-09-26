@@ -2,6 +2,7 @@ package com.phr.core
 
 import com.phr.renderer.Camera
 import com.phr.renderer.Shader
+import com.phr.util.Time
 import org.joml.Vector2f
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL20.*
@@ -85,6 +86,7 @@ class LevelEditorScene : Scene() {
         activeShader.use();
         activeShader.uploadMat4f("uProjectionMatrix", camera.getProjectionMatrix());
         activeShader.uploadMat4f("uViewMatrix", camera.getViewMatrix());
+        activeShader.uploadFloat("uTime", Time.getTimeInSeconds());
         // bindings
         glBindVertexArray(vertexArrayObjectId);
 
