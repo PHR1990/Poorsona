@@ -29,16 +29,16 @@ object Window {
     var blue = 1f
     var alpha = 1f
 
-    fun changeScene(newSceneIndex : Int) : Unit {
-        when (newSceneIndex) {
-            0 -> currentScene = LevelEditorScene();
-            1 -> currentScene = LevelScene();
+    private fun changeScene(newSceneIndex : Int) : Unit {
+        currentScene = when (newSceneIndex) {
+            0 -> LevelEditorScene();
+            1 -> LevelScene();
             else -> {
                 throw Error("Unknown scene");
             }
         }
-
         currentScene.init();
+        currentScene.start();
     }
 
     fun run() {
@@ -102,7 +102,7 @@ object Window {
     fun gameLoop() {
 
         var beginTime: Float = Time.getTimeInSeconds();
-        var elapsedTimeInSeconds: Float = -1f;
+        var deltaTime: Float = -1f;
         while (!glfwWindowShouldClose(windowReference)) {
 
             glfwPollEvents();
@@ -110,13 +110,13 @@ object Window {
             GL11.glClearColor(red, green, blue, alpha);
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
-            if (elapsedTimeInSeconds >= 0) {
-                currentScene.update(elapsedTimeInSeconds);
+            if (deltaTime >= 0) {
+                currentScene.update(deltaTime);
             }
 
             glfwSwapBuffers(windowReference)
 
-            elapsedTimeInSeconds = Time.getTimeInSeconds() - beginTime;
+            deltaTime = Time.getTimeInSeconds() - beginTime;
 
             beginTime = Time.getTimeInSeconds();
         }

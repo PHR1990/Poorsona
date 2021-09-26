@@ -1,5 +1,6 @@
 package com.phr.core
 
+import com.phr.components.SpriteRenderer
 import com.phr.renderer.Camera
 import com.phr.renderer.Shader
 import com.phr.renderer.Texture
@@ -22,7 +23,11 @@ class LevelEditorScene : Scene() {
 
     private var texture = Texture("assets/images/testImage.png");
 
+    private lateinit var gameObject : GameObject;
+
     private val DEFAULT_SHADER_PATH = "assets/shaders/default.glsl"
+
+    var firstTimeRunning : Boolean = false;
 
     var vertexArray: FloatArray = floatArrayOf(
         /*Position                  RGB A                       UV Coordinates  */
@@ -42,10 +47,14 @@ class LevelEditorScene : Scene() {
     }
 
     override fun init() {
-
-        activeShader.compileAndLink();
+        println("creating test object");
+        gameObject = GameObject("test object");
+        gameObject.addComponent(SpriteRenderer());
+        addGameObjectToScene(gameObject);
 
         camera = Camera(Vector2f(-200f, -300f));
+
+        activeShader.compileAndLink();
 
         vertexArrayObjectId = glGenVertexArrays();
         glBindVertexArray(vertexArrayObjectId);
@@ -85,9 +94,9 @@ class LevelEditorScene : Scene() {
         glEnableVertexAttribArray(2);
     }
 
-    override fun update(elapsedTimeInSeconds: Float) {
+    override fun update(deltaTime: Float) {
 
-        camera.position.x -= elapsedTimeInSeconds * 5f;
+        camera.position.x -= deltaTime * 5f;
 
         activeShader.use();
 
@@ -113,6 +122,16 @@ class LevelEditorScene : Scene() {
         glBindVertexArray(0);
 
         activeShader.detach();
+
+        if (!firstTimeRunning) {
+            println("creating second game object");
+            var gameObject2 = GameObject("Second game objhect");
+            gameObject2.addComponent(SpriteRenderer());
+            addGameObjectToScene(gameObject2);
+            firstTimeRunning = true;
+        }
+
+        gameObjects.forEach { it.update(deltaTime) }
 
     }
 }
