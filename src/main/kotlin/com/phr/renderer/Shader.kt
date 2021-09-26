@@ -160,4 +160,10 @@ class Shader constructor(filePath: String) {
         glUniform1i(variableLocation, value);
     }
 
+    fun uploadTexture(variableName: String, slot: Int) {
+        val variableLocation = glGetUniformLocation(shaderProgramId, variableName);
+        use();
+        glUniform1i(variableLocation, slot);
+    }
+
 }
