@@ -2,6 +2,7 @@ package com.phr.core
 
 import com.phr.components.SpriteRenderer
 import com.phr.renderer.Camera
+import com.phr.util.AssetPool
 import org.joml.Vector2f
 import org.joml.Vector4f
 
@@ -34,6 +35,12 @@ class LevelEditorScene : Scene() {
             }
 
         }
+
+        loadResources();
+    }
+
+    fun loadResources() {
+        AssetPool.getShader("assets/shaders/default.glsl");
     }
 
     override fun update(deltaTime: Float) {

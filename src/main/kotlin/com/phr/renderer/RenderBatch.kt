@@ -2,6 +2,7 @@ package com.phr.renderer
 
 import com.phr.components.SpriteRenderer
 import com.phr.gui.Window
+import com.phr.util.AssetPool
 
 import org.lwjgl.opengl.GL15.*
 import org.lwjgl.opengl.GL20.glDisableVertexAttribArray
@@ -35,11 +36,8 @@ class RenderBatch (maxBatchSize: Int) {
 
     var maxBatchSize = maxBatchSize;
 
-    private var shader = Shader("assets/shaders/default.glsl");
+    private var shader = AssetPool.getShader("assets/shaders/default.glsl");
 
-    init {
-        shader.compileAndLink();
-    }
 
     fun start() {
         vaoId = glGenVertexArrays();
