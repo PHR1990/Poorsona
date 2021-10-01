@@ -5,7 +5,6 @@ import com.phr.core.LevelScene
 import com.phr.core.Scene
 import com.phr.io.KeyListener
 import com.phr.io.MouseListener
-import com.phr.util.Time
 import org.lwjgl.glfw.Callbacks.glfwFreeCallbacks
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.glfw.GLFW.*
@@ -17,12 +16,13 @@ import org.lwjgl.system.MemoryUtil
 object Window {
     private var windowReference: Long = 0;
 
-    private val width = 800;
-    private val height = 600;
+    private val width = 1920;
+    private val height = 1080;
 
     private val title = "com.phr.gui.Window test";
 
-    private lateinit var currentScene: Scene;
+    lateinit var currentScene: Scene
+        private set
 
     var red = 1f
     var green = 1f
@@ -39,6 +39,7 @@ object Window {
         }
         currentScene.init();
         currentScene.start();
+
     }
 
     fun run() {
@@ -63,7 +64,7 @@ object Window {
 
         // Configure GLFW
         glfwDefaultWindowHints();
-        glfwWindowHint(GLFW_VISIBLE, GLFW.GLFW_FALSE);
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
@@ -97,13 +98,13 @@ object Window {
 
     }
 
-
-
     fun gameLoop() {
 
-        var beginTime: Float = Time.getTimeInSeconds();
+        var beginTime: Float = glfwGetTime().toFloat();
         var deltaTime: Float = -1f;
         while (!glfwWindowShouldClose(windowReference)) {
+
+
 
             glfwPollEvents();
 
@@ -112,13 +113,14 @@ object Window {
 
             if (deltaTime >= 0) {
                 currentScene.update(deltaTime);
+                println("FPS:" + (1.0f)/deltaTime);
             }
 
             glfwSwapBuffers(windowReference)
 
-            deltaTime = Time.getTimeInSeconds() - beginTime;
+            deltaTime = glfwGetTime().toFloat() - beginTime;
 
-            beginTime = Time.getTimeInSeconds();
+            beginTime = glfwGetTime().toFloat();
         }
     }
 

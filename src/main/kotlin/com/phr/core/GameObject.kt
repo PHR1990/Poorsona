@@ -1,9 +1,10 @@
 package com.phr.core
 
-class GameObject (name: String) {
+class GameObject (name: String, transform: Transform = Transform()) {
 
     private var name: String = name;
     private var components: MutableList<Component> = ArrayList();
+    public var transform: Transform = transform;
 
     fun <T : Component> getComponent(componentClass : Class<T>): T? {
         components.forEach {
