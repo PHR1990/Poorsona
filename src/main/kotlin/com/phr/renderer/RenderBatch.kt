@@ -3,6 +3,7 @@ package com.phr.renderer
 import com.phr.components.SpriteRenderer
 import com.phr.gui.Window
 import com.phr.util.AssetPool
+import org.joml.Vector2f
 
 import org.lwjgl.opengl.GL15.*
 import org.lwjgl.opengl.GL20.glDisableVertexAttribArray
@@ -14,15 +15,21 @@ import org.lwjgl.opengl.GL30.glGenVertexArrays
 
 class RenderBatch (maxBatchSize: Int) {
     // Vertex
-    // Pos                  Color
-    // float, float,        Float, float, float, float
+    // Pos                  Color                           textCoords      text Id
+// float, float,        Float, float, float, float      float, float        float
 
     private val POS_SIZE = 2;
     private val COLOR_SIZE = 4;
 
+    private val TEXTURE_COORDINATES_SIZE = 2;
+    private val TEXTURE_ID_SIZE = 1;
+
     private val POS_OFFSET = 0;
     private val COLOR_OFFSET = POS_OFFSET + POS_SIZE * Float.SIZE_BYTES;
-    private val VERTEX_SIZE = 6;
+    private val TEXTURE_COORDINATES_OFFSET = COLOR_OFFSET + COLOR_SIZE * Float.SIZE_BYTES
+    private val TEXTURE_ID_OFFSET = TEXTURE_COORDINATES_OFFSET + TEXTURE_COORDINATES_SIZE * Float.SIZE_BYTES
+
+    private val VERTEX_SIZE = 9;
     private val VERTEX_SIZE_BYTES = VERTEX_SIZE * Float.SIZE_BYTES;
 
     private var sprites = arrayOfNulls<SpriteRenderer>(maxBatchSize);
@@ -30,7 +37,9 @@ class RenderBatch (maxBatchSize: Int) {
     var hasRoom: Boolean = true
         private set;
     private var vertices = FloatArray (maxBatchSize * 4 * VERTEX_SIZE);
+    private val textureSlots = intArrayOf (0,1, 2,3,4,5,6,7);
 
+    private var textures = ArrayList<Texture>();
     private var vaoId = 0;
     private var vboId = 0;
 
@@ -59,13 +68,26 @@ class RenderBatch (maxBatchSize: Int) {
         glVertexAttribPointer(1, COLOR_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, COLOR_OFFSET.toLong())
         glEnableVertexAttribArray(1)
 
+        glVertexAttribPointer(2, TEXTURE_COORDINATES_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, TEXTURE_COORDINATES_OFFSET.toLong())
+        glEnableVertexAttribArray(2)
+
+        glVertexAttribPointer(3, TEXTURE_ID_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, TEXTURE_ID_OFFSET.toLong())
+        glEnableVertexAttribArray(3)
+
     }
 
-    fun addSprite(spriteRenderer: SpriteRenderer) {
+    fun addSprite(sprite: SpriteRenderer) {
         val index: Int = this.numberSprites;
 
-        this.sprites[index] = spriteRenderer;
+        this.sprites[index] = sprite;
         this.numberSprites++;
+
+        if (sprite.texture != null) {
+            if (!textures.contains(sprite.texture)) {
+                textures.add(sprite.texture!!);
+                // TODO if we have more than 8, create a new batch
+            }
+        }
 
         loadVertexProperties(index);
 
@@ -81,19 +103,29 @@ class RenderBatch (maxBatchSize: Int) {
 
         var offset = index * 4 * VERTEX_SIZE;
 
-        setSpritePositionAndColorIntoVertices(sprite, 1f, 1f, offset);
+        var textureId = 0;
+        if (sprite.texture != null) {
+            for (i in 0 until textures.size) {
+                if (textures.get(i) == sprite.texture) {
+                    textureId = i + 1;
+                    break;
+                }
+            }
+        }
+
+        setSpritePositionAndColorIntoVertices(sprite, 1f, 1f, offset, textureId, sprite.getTextureCoordinates()[0]);
         offset+= VERTEX_SIZE;
-        setSpritePositionAndColorIntoVertices(sprite, 1f, 0f, offset);
+        setSpritePositionAndColorIntoVertices(sprite, 1f, 0f, offset, textureId, sprite.getTextureCoordinates()[1]);
         offset+= VERTEX_SIZE;
-        setSpritePositionAndColorIntoVertices(sprite, 0f, 0f, offset);
+        setSpritePositionAndColorIntoVertices(sprite, 0f, 0f, offset, textureId, sprite.getTextureCoordinates()[2]);
         offset+= VERTEX_SIZE;
-        setSpritePositionAndColorIntoVertices(sprite, 0f, 1f, offset);
+        setSpritePositionAndColorIntoVertices(sprite, 0f, 1f, offset, textureId, sprite.getTextureCoordinates()[3]);
         offset+= VERTEX_SIZE;
 
     }
 
     private fun setSpritePositionAndColorIntoVertices
-                (sprite: SpriteRenderer,xAdd: Float, yAdd: Float, offset: Int) {
+                (sprite: SpriteRenderer,xAdd: Float, yAdd: Float, offset: Int, textureId : Int, textureCoordinates : Vector2f) {
 
         // position
         vertices[offset] = sprite.gameObject.transform.position.x + (xAdd * sprite.gameObject.transform.scale.x);
@@ -105,6 +137,11 @@ class RenderBatch (maxBatchSize: Int) {
         vertices[offset + 4] = sprite.color.z;
         vertices[offset + 5] = sprite.color.w;
 
+        // Load texture coordinates
+        vertices[offset + 6] = textureCoordinates.x;
+        vertices[offset + 7] = textureCoordinates.y;
+        // Load texture ID
+        vertices[offset + 8] = textureId.toFloat();
     }
 
     fun render() {
@@ -117,6 +154,13 @@ class RenderBatch (maxBatchSize: Int) {
         shader.uploadMat4f("uProjection", Window.currentScene.camera.getProjectionMatrix());
         shader.uploadMat4f("uView", Window.currentScene.camera.getViewMatrix());
 
+        for (i in 0 until textures.size) {
+            glActiveTexture(GL_TEXTURE0 + i + 1);
+            textures.get(i).bind();
+        }
+
+        shader.uploadIntArray("uTextures", textureSlots);
+
         glBindVertexArray(vaoId)
 
         glEnableVertexAttribArray(0)
@@ -128,6 +172,10 @@ class RenderBatch (maxBatchSize: Int) {
         glDisableVertexAttribArray(1)
 
         glBindVertexArray(0)
+
+        for (i in 0 until textures.size) {
+            textures.get(i).unbind();
+        }
 
         shader.detach();
     }

@@ -166,4 +166,10 @@ class Shader constructor(filePath: String) {
         glUniform1i(variableLocation, slot);
     }
 
+    fun uploadIntArray(variableName: String, array: IntArray) {
+        val variableLocation = glGetUniformLocation(shaderProgramId, variableName);
+        use();
+        glUniform1iv(variableLocation, array);
+    }
+
 }

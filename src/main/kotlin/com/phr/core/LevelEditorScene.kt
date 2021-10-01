@@ -11,30 +11,15 @@ class LevelEditorScene : Scene() {
     override fun init() {
         this.camera = Camera(Vector2f(-250f, 0f));
 
-        val xOffset = 10;
-        val yOffset = 10;
+        val gameObject1 = GameObject("GO1", Transform(Vector2f(100f,100f),  Vector2f(256f, 256f)));
+        gameObject1.addComponent(SpriteRenderer(Vector4f(1f, 1f, 1f,1f),
+            AssetPool.getTexture("assets/images/testImage.png")))
+        addGameObjectToScene(gameObject1);
 
-        val totalWidth = 600 - (xOffset * 2);
-        val totalHeight = 300 - (yOffset * 2);
-
-        val sizeX = totalWidth / 100f;
-        val sizeY = totalHeight / 100f;
-
-        val padding = 0;
-
-        for (x in 0 until 100) {
-            for (y in 0 until 100) {
-                val xPos = xOffset + (x * sizeX) + (padding * x);
-                val yPos = yOffset + (y * sizeY) + (padding * y);
-
-                var gameObject = GameObject("obj", Transform(Vector2f(xPos, yPos), Vector2f(sizeX, sizeY)));
-                gameObject.addComponent(SpriteRenderer(
-                    Vector4f(xPos / totalWidth, yPos/totalHeight, 1f, 1f))
-                )
-                addGameObjectToScene(gameObject);
-            }
-
-        }
+        val gameObject2 = GameObject("GO1", Transform(Vector2f(400f,100f),  Vector2f(256f, 256f)));
+        gameObject2.addComponent(SpriteRenderer(Vector4f(1f, 1f, 1f,1f),
+            AssetPool.getTexture("assets/images/testImage2.png")))
+        addGameObjectToScene(gameObject2);
 
         loadResources();
     }

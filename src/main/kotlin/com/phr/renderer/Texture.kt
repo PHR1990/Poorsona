@@ -2,8 +2,7 @@ package com.phr.renderer
 
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL11.*
-import org.lwjgl.stb.STBImage.stbi_image_free
-import org.lwjgl.stb.STBImage.stbi_load
+import org.lwjgl.stb.STBImage.*
 import java.nio.ByteBuffer
 import java.nio.IntBuffer
 
@@ -24,10 +23,12 @@ class Texture (filePath: String) {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         // when shrinking, pixelate
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
+        stbi_set_flip_vertically_on_load(true)
         val width: IntBuffer = BufferUtils.createIntBuffer(1);
         val height: IntBuffer = BufferUtils.createIntBuffer(1);
         val channels: IntBuffer = BufferUtils.createIntBuffer(1);
+
+
         val image: ByteBuffer? = stbi_load(filePath, width, height, channels, 0);
 
         if (image != null) {

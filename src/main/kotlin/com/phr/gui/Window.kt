@@ -24,10 +24,10 @@ object Window {
     lateinit var currentScene: Scene
         private set
 
-    var red = 1f
-    var green = 1f
-    var blue = 1f
-    var alpha = 1f
+    var red = 0f
+    var green = 0f
+    var blue = 0f
+    var alpha = 0f
 
     private fun changeScene(newSceneIndex : Int) : Unit {
         currentScene = when (newSceneIndex) {

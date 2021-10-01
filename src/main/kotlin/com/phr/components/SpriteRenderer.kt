@@ -8,10 +8,11 @@ import org.joml.Vector4f
 class SpriteRenderer(color: Vector4f = Vector4f(1f, 1f, 1f, 1f), texture: Texture? = null) : Component() {
 
     var color: Vector4f = color;
-    //var textCoords: List<Vector2f>
-      //  get() {return arrayListOf()};
+    var textCoordinates: List<Vector2f> = ArrayList();
 
-    var texture: Texture? = texture;
+    var texture: Texture? = texture
+        private set
+
 
     override fun start() {
 
@@ -25,8 +26,8 @@ class SpriteRenderer(color: Vector4f = Vector4f(1f, 1f, 1f, 1f), texture: Textur
         return listOf(
             Vector2f(1f, 1f),
             Vector2f(1f, 0f),
-            Vector2f(0f, 1f),
             Vector2f(0f, 0f),
+            Vector2f(0f, 1f),
         );
     }
 }
