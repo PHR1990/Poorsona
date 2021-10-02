@@ -5,10 +5,18 @@ import com.phr.components.SpriteRenderer
 import com.phr.components.Spritesheet
 import com.phr.renderer.Camera
 import com.phr.util.AssetPool
+import com.sun.management.GarbageCollectionNotificationInfo
 import org.joml.Vector2f
 import org.joml.Vector4f
 
 class LevelEditorScene : Scene() {
+
+    lateinit var gameObject1 : GameObject ;
+    lateinit var spritesheet : Spritesheet;
+
+    var spriteIndex = 0;
+    var spriteFlipTime = 0.2f;
+    var spriteFlipTimeLeft = 0f
 
     override fun init() {
 
@@ -16,9 +24,9 @@ class LevelEditorScene : Scene() {
 
         this.camera = Camera(Vector2f(-250f, 0f));
 
-        val spritesheet = AssetPool.getSpritesheet("assets/images/spritesheet.png")
+        spritesheet = AssetPool.getSpritesheet("assets/images/spritesheet.png")
 
-        val gameObject1 = GameObject("GO1", Transform(Vector2f(100f,100f),  Vector2f(256f, 256f)));
+        gameObject1 = GameObject("GO1", Transform(Vector2f(100f,100f),  Vector2f(256f, 256f)));
         gameObject1.addComponent(SpriteRenderer(spritesheet.sprites.get(0)))
 
         addGameObjectToScene(gameObject1);
@@ -38,7 +46,15 @@ class LevelEditorScene : Scene() {
     }
 
     override fun update(deltaTime: Float) {
-
+        spriteFlipTimeLeft-= deltaTime;
+        if (spriteFlipTimeLeft <= 0) {
+            spriteFlipTimeLeft = spriteFlipTime;
+            spriteIndex++;
+            if (spriteIndex > 4) {
+                spriteIndex=0;
+            }
+            gameObject1.getComponent(SpriteRenderer::class.java)!!.sprite = spritesheet.sprites.get(spriteIndex);
+        }
         gameObjects.forEach { it.update(deltaTime) }
 
         renderer.render();

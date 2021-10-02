@@ -145,9 +145,22 @@ class RenderBatch (maxBatchSize: Int) {
     }
 
     fun render() {
+        var rebufferData = true;
+        for (i in 0 until numberSprites) {
+            val sprite = sprites.get(i);
+            if (sprite!!.isDirty) {
+                loadVertexProperties(i);
+                sprite!!.isDirty = false;
+
+                rebufferData = true;
+            }
+        }
+        if (rebufferData) {
+            glBindBuffer(GL_ARRAY_BUFFER, vboId);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
+        }
         // For now we will rebuffer all data every frame
-        glBindBuffer(GL_ARRAY_BUFFER, vboId);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
+
 
         // use shader
         shader.use();

@@ -16,16 +16,16 @@ class Renderer {
         }
     }
 
-    fun add(sproteRenderer:SpriteRenderer) {
+    fun add(spriteRenderer:SpriteRenderer) {
 
         var wasAdded = false;
 
         batches.forEach { batch : RenderBatch ->
             if (batch.hasRoom) {
-                val texture = sproteRenderer.sprite.texture;
+                val texture = spriteRenderer.sprite.texture;
                 if (texture == null ||(batch.hasTexture(texture) || batch.hasTextureRoom())) {
 
-                    batch.addSprite(sproteRenderer);
+                    batch.addSprite(spriteRenderer);
                     wasAdded = true;
                     return;
                 }
@@ -37,7 +37,7 @@ class Renderer {
             val newBatch = RenderBatch(MAX_BATCH_SIZE);
             newBatch.start();
             batches.add(newBatch);
-            newBatch.addSprite(sproteRenderer);
+            newBatch.addSprite(spriteRenderer);
         }
     }
 
