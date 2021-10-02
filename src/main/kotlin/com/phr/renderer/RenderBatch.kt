@@ -76,15 +76,15 @@ class RenderBatch (maxBatchSize: Int) {
 
     }
 
-    fun addSprite(sprite: SpriteRenderer) {
+    fun addSprite(spriteRenderer: SpriteRenderer) {
         val index: Int = this.numberSprites;
 
-        this.sprites[index] = sprite;
+        this.sprites[index] = spriteRenderer;
         this.numberSprites++;
 
-        if (sprite.texture != null) {
-            if (!textures.contains(sprite.texture)) {
-                textures.add(sprite.texture!!);
+        if (spriteRenderer.sprite.texture != null) {
+            if (!textures.contains(spriteRenderer.sprite.texture)) {
+                textures.add(spriteRenderer.sprite.texture!!);
                 // TODO if we have more than 8, create a new batch
             }
         }
@@ -97,29 +97,29 @@ class RenderBatch (maxBatchSize: Int) {
     }
 
     private fun loadVertexProperties(index: Int) {
-        val sprite: SpriteRenderer = sprites[index]!!; // Unexpected null, explode
+        val spriteRenderer: SpriteRenderer = sprites[index]!!; // Unexpected null, explode
 
         // float float  float float float float (position   color)
 
         var offset = index * 4 * VERTEX_SIZE;
 
         var textureId = 0;
-        if (sprite.texture != null) {
+        if (spriteRenderer.sprite.texture != null) {
             for (i in 0 until textures.size) {
-                if (textures.get(i) == sprite.texture) {
+                if (textures.get(i) == spriteRenderer.sprite.texture) {
                     textureId = i + 1;
                     break;
                 }
             }
         }
 
-        setSpritePositionAndColorIntoVertices(sprite, 1f, 1f, offset, textureId, sprite.getTextureCoordinates()[0]);
+        setSpritePositionAndColorIntoVertices(spriteRenderer, 1f, 1f, offset, textureId, spriteRenderer.getTextureCoordinates()[0]);
         offset+= VERTEX_SIZE;
-        setSpritePositionAndColorIntoVertices(sprite, 1f, 0f, offset, textureId, sprite.getTextureCoordinates()[1]);
+        setSpritePositionAndColorIntoVertices(spriteRenderer, 1f, 0f, offset, textureId, spriteRenderer.getTextureCoordinates()[1]);
         offset+= VERTEX_SIZE;
-        setSpritePositionAndColorIntoVertices(sprite, 0f, 0f, offset, textureId, sprite.getTextureCoordinates()[2]);
+        setSpritePositionAndColorIntoVertices(spriteRenderer, 0f, 0f, offset, textureId, spriteRenderer.getTextureCoordinates()[2]);
         offset+= VERTEX_SIZE;
-        setSpritePositionAndColorIntoVertices(sprite, 0f, 1f, offset, textureId, sprite.getTextureCoordinates()[3]);
+        setSpritePositionAndColorIntoVertices(spriteRenderer, 0f, 1f, offset, textureId, spriteRenderer.getTextureCoordinates()[3]);
         offset+= VERTEX_SIZE;
 
     }
@@ -208,6 +208,14 @@ class RenderBatch (maxBatchSize: Int) {
         elements[offsetArrayIndex + 3] = offset + 0;
         elements[offsetArrayIndex + 4] = offset + 2;
         elements[offsetArrayIndex + 5] = offset + 1;
+    }
+
+    fun hasTextureRoom(): Boolean {
+        return textures.size < 8;
+    }
+
+    fun hasTexture(texture: Texture): Boolean {
+        return textures.contains(texture);
     }
 
 }

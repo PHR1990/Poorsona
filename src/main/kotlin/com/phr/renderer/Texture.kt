@@ -10,6 +10,11 @@ class Texture (filePath: String) {
 
     private val filePath: String = filePath;
     private val textureId: Int = glGenTextures();
+    var width = 0
+        private set;
+
+    var height = 0
+        private set;
 
     init {
         glBindTexture(GL_TEXTURE_2D, textureId);
@@ -32,6 +37,8 @@ class Texture (filePath: String) {
         val image: ByteBuffer? = stbi_load(filePath, width, height, channels, 0);
 
         if (image != null) {
+            this.width = width.get(0);
+            this.height = height.get(0);
 
             if (channels.get(0) == 3) {
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0)
