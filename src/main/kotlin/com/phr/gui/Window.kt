@@ -11,6 +11,7 @@ import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL11
+import org.lwjgl.opengl.GL11.*
 import org.lwjgl.system.MemoryUtil
 
 object Window {
@@ -24,10 +25,10 @@ object Window {
     lateinit var currentScene: Scene
         private set
 
-    var red = 0f
-    var green = 0f
-    var blue = 0f
-    var alpha = 0f
+    var red = 1f
+    var green = 1f
+    var blue = 1f
+    var alpha = 1f
 
     private fun changeScene(newSceneIndex : Int) : Unit {
         currentScene = when (newSceneIndex) {
@@ -87,6 +88,10 @@ object Window {
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
         GL.createCapabilities();
+
+        glEnable(GL_BLEND);
+
+        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     private fun initializeListeners() {

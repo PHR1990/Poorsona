@@ -14,10 +14,6 @@ class LevelEditorScene : Scene() {
     lateinit var gameObject1 : GameObject ;
     lateinit var spritesheet : Spritesheet;
 
-    var spriteIndex = 0;
-    var spriteFlipTime = 0.2f;
-    var spriteFlipTimeLeft = 0f
-
     override fun init() {
 
         loadResources();
@@ -26,13 +22,19 @@ class LevelEditorScene : Scene() {
 
         spritesheet = AssetPool.getSpritesheet("assets/images/spritesheet.png")
 
-        gameObject1 = GameObject("GO1", Transform(Vector2f(100f,100f),  Vector2f(256f, 256f)));
-        gameObject1.addComponent(SpriteRenderer(spritesheet.sprites.get(0)))
+        gameObject1 = GameObject("GO1", Transform(Vector2f(200f,100f),  Vector2f(256f, 256f)), -1);
+        gameObject1.addComponent(SpriteRenderer(
+            //spritesheet.sprites.get(0))
+            Sprite(AssetPool.getTexture("assets/images/blendImage1.png")))
+        )
 
         addGameObjectToScene(gameObject1);
 
-        val gameObject2 = GameObject("GO1", Transform(Vector2f(400f,100f),  Vector2f(256f, 256f)));
-        gameObject2.addComponent(SpriteRenderer(spritesheet.sprites.get(10)))
+        val gameObject2 = GameObject("GO1", Transform(Vector2f(400f,100f),  Vector2f(256f, 256f)), 2);
+        gameObject2.addComponent(SpriteRenderer(
+            //spritesheet.sprites.get(10))
+            Sprite(AssetPool.getTexture("assets/images/blendImage2.png")))
+        )
         addGameObjectToScene(gameObject2);
 
     }
@@ -46,15 +48,7 @@ class LevelEditorScene : Scene() {
     }
 
     override fun update(deltaTime: Float) {
-        spriteFlipTimeLeft-= deltaTime;
-        if (spriteFlipTimeLeft <= 0) {
-            spriteFlipTimeLeft = spriteFlipTime;
-            spriteIndex++;
-            if (spriteIndex > 4) {
-                spriteIndex=0;
-            }
-            gameObject1.getComponent(SpriteRenderer::class.java)!!.sprite = spritesheet.sprites.get(spriteIndex);
-        }
+
         gameObjects.forEach { it.update(deltaTime) }
 
         renderer.render();

@@ -2,6 +2,8 @@ package com.phr.renderer
 
 import com.phr.components.SpriteRenderer
 import com.phr.core.GameObject
+import java.util.*
+import kotlin.collections.ArrayList
 
 class Renderer {
 
@@ -21,7 +23,7 @@ class Renderer {
         var wasAdded = false;
 
         batches.forEach { batch : RenderBatch ->
-            if (batch.hasRoom) {
+            if (batch.hasRoom && batch.zIndex == spriteRenderer.gameObject.zIndex) {
                 val texture = spriteRenderer.sprite.texture;
                 if (texture == null ||(batch.hasTexture(texture) || batch.hasTextureRoom())) {
 
@@ -34,10 +36,11 @@ class Renderer {
         }
 
         if (!wasAdded) {
-            val newBatch = RenderBatch(MAX_BATCH_SIZE);
+            val newBatch = RenderBatch(MAX_BATCH_SIZE, spriteRenderer.gameObject.zIndex);
             newBatch.start();
             batches.add(newBatch);
             newBatch.addSprite(spriteRenderer);
+            Collections.sort(batches);
         }
     }
 

@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL30.glBindVertexArray
 import org.lwjgl.opengl.GL30.glGenVertexArrays
 
 
-class RenderBatch (maxBatchSize: Int) {
+class RenderBatch (maxBatchSize: Int, zIndex: Int) : Comparable<RenderBatch> {
     // Vertex
     // Pos                  Color                           textCoords      text Id
 // float, float,        Float, float, float, float      float, float        float
@@ -44,6 +44,8 @@ class RenderBatch (maxBatchSize: Int) {
     private var vboId = 0;
 
     var maxBatchSize = maxBatchSize;
+
+    val zIndex = zIndex;
 
     private var shader = AssetPool.getShader("assets/shaders/default.glsl");
 
@@ -229,6 +231,10 @@ class RenderBatch (maxBatchSize: Int) {
 
     fun hasTexture(texture: Texture): Boolean {
         return textures.contains(texture);
+    }
+
+    override fun compareTo(other: RenderBatch): Int {
+        return Integer.compare(this.zIndex, other.zIndex);
     }
 
 }
