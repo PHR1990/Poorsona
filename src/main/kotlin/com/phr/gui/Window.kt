@@ -6,7 +6,6 @@ import com.phr.core.Scene
 import com.phr.io.KeyListener
 import com.phr.io.MouseListener
 import org.lwjgl.glfw.Callbacks.glfwFreeCallbacks
-import org.lwjgl.glfw.GLFW
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL
@@ -15,12 +14,17 @@ import org.lwjgl.opengl.GL11.*
 import org.lwjgl.system.MemoryUtil
 
 object Window {
-    private var windowReference: Long = 0;
+    var windowReference: Long = 0
 
-    private val width = 1920;
-    private val height = 1080;
+    var width = 1920
+        private set;
+
+    var height = 1080
+        private set;
 
     private val title = "com.phr.gui.Window test";
+
+    private var imGuiLayer = ImGuiLayer;
 
     lateinit var currentScene: Scene
         private set
@@ -47,6 +51,8 @@ object Window {
         initializeOpenGlWindow()
 
         initializeListeners()
+
+        imGuiLayer.initializeImGui(windowReference);
 
         changeScene(0);
         gameLoop()
@@ -101,6 +107,13 @@ object Window {
 
         glfwSetKeyCallback(windowReference, KeyListener::keyPressedCallback)
 
+        glfwSetWindowSizeCallback(windowReference, Window::resizeWindowCallback);
+
+    }
+
+    private fun resizeWindowCallback(window: Long, newWidth: Int, newHeight: Int) {
+        this.width = newWidth;
+        this.height = newHeight;
     }
 
     fun gameLoop() {
@@ -120,6 +133,8 @@ object Window {
                 currentScene.update(deltaTime);
                 println("FPS:" + (1.0f)/deltaTime);
             }
+
+            imGuiLayer.update(deltaTime)
 
             glfwSwapBuffers(windowReference)
 
