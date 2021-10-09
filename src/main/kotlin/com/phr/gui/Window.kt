@@ -131,10 +131,10 @@ object Window {
 
             if (deltaTime >= 0) {
                 currentScene.update(deltaTime);
-                println("FPS:" + (1.0f)/deltaTime);
+                //println("FPS:" + (1.0f)/deltaTime);
             }
 
-            imGuiLayer.update(deltaTime)
+            imGuiLayer.update(deltaTime, currentScene)
 
             glfwSwapBuffers(windowReference)
 

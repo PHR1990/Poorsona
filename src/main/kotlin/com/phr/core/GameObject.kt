@@ -41,4 +41,8 @@ class GameObject (name: String, transform: Transform = Transform(), zIndex: Int 
             it.start();
         }
     }
+
+    fun imGui() {
+        components.forEach { it.imGui() }
+    }
 }
