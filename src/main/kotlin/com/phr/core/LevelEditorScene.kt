@@ -1,5 +1,6 @@
 package com.phr.core
 
+import com.google.gson.GsonBuilder
 import com.phr.components.Sprite
 import com.phr.components.SpriteRenderer
 import com.phr.components.Spritesheet
@@ -42,6 +43,9 @@ class LevelEditorScene : Scene() {
         )
         addGameObjectToScene(gameObject2);
 
+        val gson = GsonBuilder().setPrettyPrinting().create();
+
+        println(gson.toJson(gameObject2));
     }
 
     fun loadResources() {

@@ -2,7 +2,7 @@ package com.phr.core
 
 abstract class Component {
 
-    lateinit var gameObject: GameObject;
+    @Transient lateinit var gameObject: GameObject;
 
     open fun update(deltaTime : Float) {
 

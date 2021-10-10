@@ -28,9 +28,9 @@ class SpriteRenderer(sprite : Sprite, color: Vector4f = Vector4f(1f, 1f, 1f, 1f)
             field = value
         }
 
-    var isDirty = true;
+    @Transient var isDirty = true;
 
-    lateinit var lastTransform: Transform;
+    @Transient lateinit var lastTransform: Transform;
 
 
 
