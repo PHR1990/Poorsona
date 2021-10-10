@@ -22,6 +22,10 @@ class LevelEditorScene : Scene() {
 
         this.camera = Camera(Vector2f(-250f, 0f));
 
+        if (levelLoaded) {
+         return;
+        }
+
         spritesheet = AssetPool.getSpritesheet("assets/images/spritesheet.png")
 
         gameObject1 = GameObject("GO1", Transform(Vector2f(200f,100f),  Vector2f(256f, 256f)), -1);
@@ -43,9 +47,7 @@ class LevelEditorScene : Scene() {
         )
         addGameObjectToScene(gameObject2);
 
-        val gson = GsonBuilder().setPrettyPrinting().create();
 
-        println(gson.toJson(gameObject2));
     }
 
     fun loadResources() {

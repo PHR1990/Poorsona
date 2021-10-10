@@ -120,6 +120,9 @@ object Window {
 
         var beginTime: Float = glfwGetTime().toFloat();
         var deltaTime: Float = -1f;
+
+        currentScene.load();
+
         while (!glfwWindowShouldClose(windowReference)) {
 
 
@@ -142,6 +145,8 @@ object Window {
 
             beginTime = glfwGetTime().toFloat();
         }
+
+        currentScene.saveExit();
     }
 
     private fun dispose() {

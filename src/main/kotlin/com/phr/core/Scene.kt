@@ -1,8 +1,13 @@
 package com.phr.core
 
+import com.google.gson.GsonBuilder
 import com.phr.renderer.Camera
 import com.phr.renderer.Renderer
 import imgui.ImGui
+import java.io.FileWriter
+import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.Paths
 
 abstract class Scene {
 
@@ -12,6 +17,7 @@ abstract class Scene {
 
     var gameObjects : MutableList<GameObject> = ArrayList();
     var isRunning : Boolean = false;
+    var levelLoaded = false;
     protected var activeGameObject : GameObject? = null;
 
     abstract fun update(deltaTime: Float) : Unit;
@@ -49,5 +55,42 @@ abstract class Scene {
 
     open fun imGui() {
 
+    }
+
+    fun saveExit() {
+        val gson = GsonBuilder()
+            .setPrettyPrinting()
+            .registerTypeAdapter(Component::class.java, ComponentDeserializer())
+            .registerTypeAdapter(GameObject::class.java, GameObjectDeserializer())
+            .create();
+
+        val fileWriter = FileWriter("level.txt");
+        fileWriter.write(gson.toJson(this.gameObjects));
+        fileWriter.close();
+    }
+
+    fun load() {
+        val gson = GsonBuilder()
+            .setPrettyPrinting()
+            .registerTypeAdapter(Component::class.java, ComponentDeserializer())
+            .registerTypeAdapter(GameObject::class.java, GameObjectDeserializer())
+            .create();
+
+        var infile : String = "";
+        try {
+            infile = String(Files.readAllBytes(Paths.get("level.txt")));
+        } catch (e : IOException) {
+            return;
+        }
+        if (!infile.equals("")) {
+            val gameObjects = gson.fromJson(infile, Array<GameObject>::class.java)
+
+            gameObjects.forEach {
+                gameObject: GameObject ->
+                addGameObjectToScene(gameObject);
+            }
+
+            levelLoaded = true;
+        }
     }
 }
