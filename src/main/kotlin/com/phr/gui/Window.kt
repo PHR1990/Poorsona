@@ -42,6 +42,7 @@ object Window {
                 throw Error("Unknown scene");
             }
         }
+        currentScene.load();
         currentScene.init();
         currentScene.start();
 
@@ -120,8 +121,6 @@ object Window {
 
         var beginTime: Float = glfwGetTime().toFloat();
         var deltaTime: Float = -1f;
-
-        currentScene.load();
 
         while (!glfwWindowShouldClose(windowReference)) {
 

@@ -1,6 +1,7 @@
 package com.phr.core
 
 import com.google.gson.GsonBuilder
+import com.phr.components.RigidBody
 import com.phr.components.Sprite
 import com.phr.components.SpriteRenderer
 import com.phr.components.Spritesheet
@@ -23,7 +24,9 @@ class LevelEditorScene : Scene() {
         this.camera = Camera(Vector2f(-250f, 0f));
 
         if (levelLoaded) {
-         return;
+            this.activeGameObject = gameObjects.get(0)
+
+            return;
         }
 
         spritesheet = AssetPool.getSpritesheet("assets/images/spritesheet.png")
@@ -33,20 +36,20 @@ class LevelEditorScene : Scene() {
             //spritesheet.sprites.get(0))
             Sprite(AssetPool.getTexture("assets/images/blendImage1.png")))
         )*/
-        gameObject1.addComponent(SpriteRenderer(Vector4f(1f,0f,0f,1f))
-        )
+        //gameObject1.addComponent(SpriteRenderer(Vector4f(1f,0f,0f,1f)))
+        gameObject1.addComponent(RigidBody())
 
         addGameObjectToScene(gameObject1);
 
         this.activeGameObject = gameObject1;
 
-        val gameObject2 = GameObject("GO1", Transform(Vector2f(400f,100f),  Vector2f(256f, 256f)), 2);
+        /*val gameObject2 = GameObject("GO1", Transform(Vector2f(400f,100f),  Vector2f(256f, 256f)), 2);
         gameObject2.addComponent(SpriteRenderer(
             //spritesheet.sprites.get(10))
             Sprite(AssetPool.getTexture("assets/images/blendImage2.png")))
         )
         addGameObjectToScene(gameObject2);
-
+        */
 
     }
 
