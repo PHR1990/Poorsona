@@ -9,7 +9,8 @@ import java.nio.IntBuffer
 class Texture (filePath: String) {
 
     private val filePath: String = filePath;
-    private val textureId: Int = glGenTextures();
+    val textureId: Int = glGenTextures()
+
     var width = 0
         private set;
 

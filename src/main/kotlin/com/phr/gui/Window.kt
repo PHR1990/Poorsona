@@ -16,10 +16,10 @@ import org.lwjgl.system.MemoryUtil
 object Window {
     var windowReference: Long = 0
 
-    var width = 1920
+    var width = 800f
         private set;
 
-    var height = 1080
+    var height = 600f
         private set;
 
     private val title = "com.phr.gui.Window test";
@@ -77,7 +77,7 @@ object Window {
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
         // Create the window
-        windowReference = glfwCreateWindow(width, height, title, MemoryUtil.NULL, MemoryUtil.NULL);
+        windowReference = glfwCreateWindow(width.toInt(), height.toInt(), title, MemoryUtil.NULL, MemoryUtil.NULL);
 
         check(windowReference != MemoryUtil.NULL) { "Failed to create the GLFW window." }
 
@@ -113,8 +113,8 @@ object Window {
     }
 
     private fun resizeWindowCallback(window: Long, newWidth: Int, newHeight: Int) {
-        this.width = newWidth;
-        this.height = newHeight;
+        this.width = newWidth.toFloat();
+        this.height = newHeight.toFloat();
     }
 
     fun gameLoop() {

@@ -9,9 +9,7 @@ import org.joml.Vector2f
 import org.joml.Vector4f
 import java.util.*
 
-class SpriteRenderer(sprite : Sprite, color: Vector4f = Vector4f(1f, 1f, 1f, 1f)) : Component() {
-
-    constructor(color: Vector4f) : this(Sprite(null), color)
+class SpriteRenderer(sprite : Sprite = Sprite(), color: Vector4f = Vector4f(1f, 1f, 1f, 1f)) : Component() {
 
     var color: Vector4f = color
         set(value) {

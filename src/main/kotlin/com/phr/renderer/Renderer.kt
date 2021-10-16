@@ -45,6 +45,8 @@ class Renderer {
     }
 
     fun render() {
-        batches.forEach{it.render()};
+        batches.forEach{
+            it.render()
+        };
     }
 }

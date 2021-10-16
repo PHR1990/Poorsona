@@ -25,7 +25,7 @@ data class Spritesheet (var texture: Texture, var spriteWidth: Int, var spriteHe
                 Vector2f(leftX, topY),
             );
 
-            val sprite = Sprite(this.texture, textureCoordinates);
+            val sprite = Sprite(this.texture, textureCoordinates, spriteWidth, spriteHeight);
             sprites.add(sprite);
 
             currentX += spriteWidth + spacing;

@@ -8,6 +8,13 @@ class Camera (position: Vector2f) {
 
     private var projectionMatrix: Matrix4f = Matrix4f();
     private var viewMatrix: Matrix4f = Matrix4f();
+    var inverseProjection = Matrix4f()
+        private set
+
+
+    var inverseView = Matrix4f()
+        private set
+
 
     var position: Vector2f = position;
 
@@ -18,6 +25,7 @@ class Camera (position: Vector2f) {
     private fun adjustProjection() {
         projectionMatrix.identity();
         projectionMatrix.ortho(0.0f, 32.0f * 40f, 0f, 32f * 21f, 0f, 100f);
+        projectionMatrix.invert(inverseProjection);
     }
 
     fun getViewMatrix(): Matrix4f {
@@ -30,6 +38,7 @@ class Camera (position: Vector2f) {
             , cameraFront.add(position.x, position.y, 0f)
             , cameraUp
         );
+        viewMatrix.invert(inverseView);
 
         return this.viewMatrix;
 
@@ -38,4 +47,5 @@ class Camera (position: Vector2f) {
     fun getProjectionMatrix(): Matrix4f {
         return projectionMatrix;
     }
+
 }
