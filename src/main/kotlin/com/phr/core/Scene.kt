@@ -20,7 +20,12 @@ abstract class Scene {
     var levelLoaded = false;
     protected var activeGameObject : GameObject? = null;
 
-    abstract fun update(deltaTime: Float) : Unit;
+    open fun update(deltaTime: Float) {
+
+        gameObjects.forEach { it.update(deltaTime) }
+
+        renderer.render();
+    }
 
     open fun init() {
     }

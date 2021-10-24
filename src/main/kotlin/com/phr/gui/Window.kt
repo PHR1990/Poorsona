@@ -2,6 +2,7 @@ package com.phr.gui
 
 import com.phr.core.LevelEditorScene
 import com.phr.core.LevelScene
+import com.phr.core.PongScene
 import com.phr.core.Scene
 import com.phr.io.KeyListener
 import com.phr.io.MouseListener
@@ -38,6 +39,7 @@ object Window {
         currentScene = when (newSceneIndex) {
             0 -> LevelEditorScene();
             1 -> LevelScene();
+            2 -> PongScene();
             else -> {
                 throw Error("Unknown scene");
             }
@@ -124,12 +126,10 @@ object Window {
 
         while (!glfwWindowShouldClose(windowReference)) {
 
-
-
             glfwPollEvents();
 
-            GL11.glClearColor(red, green, blue, alpha);
-            GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+            glClearColor(red, green, blue, alpha);
+            glClear(GL_COLOR_BUFFER_BIT);
 
             if (deltaTime >= 0) {
                 currentScene.update(deltaTime);
