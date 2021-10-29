@@ -78,25 +78,6 @@ object MouseListener {
         return temp.y;
     }
 
-/*
-    fun getOrthoX(): Float {
-        var currentX: Float = posX.toFloat();
-        currentX = (currentX / Window.width) * 2.0f - 1.0f
-        val tmp = Vector4f(currentX, 0f, 0f, 1f)
-        tmp.mul(Window.currentScene.camera.inverseProjection).mul(Window.currentScene.camera.inverseView)
-        currentX = tmp.x
-        return currentX
-    }
-
-    fun getOrthoY(): Float {
-        var currentY: Float = posY.toFloat();
-        currentY = (currentY / Window.height) * 2.0f - 1.0f
-        val tmp = Vector4f(0f, currentY, 0f, 1f)
-        tmp.mul(Window.currentScene.camera.inverseProjection).mul(Window.currentScene.camera.inverseView)
-        currentY = tmp.y
-        return currentY
-    }
-*/
     fun mouseScrollCallback(window: Long, scrollX: Double, scrollY : Double) {
         MouseListener.scrollX = scrollX;
         MouseListener.scrollY = scrollY;

@@ -35,11 +35,19 @@ object Window {
     var blue = 1f
     var alpha = 1f
 
+    var imGuiEnabled = true;
+
     private fun changeScene(newSceneIndex : Int) : Unit {
         currentScene = when (newSceneIndex) {
-            0 -> LevelEditorScene();
+            0 -> {
+                imGuiEnabled = true;
+                LevelEditorScene()
+            };
             1 -> LevelScene();
-            2 -> PongScene();
+            2 -> {
+                imGuiEnabled = false;
+                PongScene()
+            };
             else -> {
                 throw Error("Unknown scene");
             }
@@ -55,10 +63,15 @@ object Window {
 
         initializeListeners()
 
-        imGuiLayer.initializeImGui(windowReference);
+        changeScene(2);
 
-        changeScene(0);
+        if (imGuiEnabled) {
+            imGuiLayer.initializeImGui(windowReference);
+        }
+
         gameLoop()
+
+        //currentScene.saveExit();
 
         dispose()
 
@@ -136,7 +149,9 @@ object Window {
                 //println("FPS:" + (1.0f)/deltaTime);
             }
 
-            imGuiLayer.update(deltaTime, currentScene)
+            if (imGuiEnabled) {
+                imGuiLayer.update(deltaTime, currentScene)
+            }
 
             glfwSwapBuffers(windowReference)
 
@@ -145,7 +160,6 @@ object Window {
             beginTime = glfwGetTime().toFloat();
         }
 
-        currentScene.saveExit();
     }
 
     private fun dispose() {
