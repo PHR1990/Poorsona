@@ -1,9 +1,9 @@
 package com.phr.gui
 
-import com.phr.core.LevelEditorScene
-import com.phr.core.LevelScene
+import com.phr.scenes.LevelEditorScene
+import com.phr.scenes.LevelScene
 import com.phr.pong.PongScene
-import com.phr.core.Scene
+import com.phr.scenes.Scene
 import com.phr.io.KeyListener
 import com.phr.io.MouseListener
 import org.lwjgl.glfw.Callbacks.glfwFreeCallbacks
@@ -62,7 +62,7 @@ object Window {
 
         initializeListeners()
 
-        changeScene(2);
+        changeScene(0);
 
         if (imGuiEnabled) {
             imGuiLayer.initializeImGui(windowReference);
@@ -70,7 +70,7 @@ object Window {
 
         gameLoop()
 
-        //currentScene.saveExit();
+        currentScene.saveExit();
 
         dispose()
 

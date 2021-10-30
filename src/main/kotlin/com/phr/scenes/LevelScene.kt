@@ -1,4 +1,4 @@
-package com.phr.core
+package com.phr.scenes
 
 class LevelScene : Scene() {
     override fun update(deltaTime: Float) {

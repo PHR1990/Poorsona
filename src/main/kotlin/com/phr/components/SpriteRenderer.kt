@@ -1,13 +1,9 @@
 package com.phr.components
 
-import com.phr.core.Component
 import com.phr.core.Transform
-import com.phr.renderer.Texture
-import com.phr.util.TextureConstants
 import imgui.ImGui
 import org.joml.Vector2f
 import org.joml.Vector4f
-import java.util.*
 
 class SpriteRenderer(sprite : Sprite = Sprite(), color: Vector4f = Vector4f(1f, 1f, 1f, 1f)) : Component() {
 

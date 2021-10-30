@@ -1,6 +1,10 @@
-package com.phr.core
+package com.phr.scenes
 
 import com.google.gson.GsonBuilder
+import com.phr.components.Component
+import com.phr.components.ComponentDeserializer
+import com.phr.core.GameObject
+import com.phr.core.GameObjectDeserializer
 import com.phr.renderer.Camera
 import com.phr.renderer.Renderer
 import imgui.ImGui
@@ -88,12 +92,18 @@ abstract class Scene {
             return;
         }
         if (!infile.equals("")) {
+            var maxGameObjectId = -1;
+            var maxComponentId = -1;
             val gameObjects = gson.fromJson(infile, Array<GameObject>::class.java)
 
             gameObjects.forEach {
                 gameObject: GameObject ->
                 addGameObjectToScene(gameObject);
+
+
             }
+            maxGameObjectId++;
+            maxComponentId++;
 
             levelLoaded = true;
         }

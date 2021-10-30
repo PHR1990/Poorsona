@@ -1,8 +1,11 @@
 package com.phr.gui
 
-import com.phr.core.Scene
+import com.phr.scenes.Scene
 import com.phr.gui.Window.height
 import com.phr.gui.Window.width
+import com.phr.gui.Window.windowReference
+import com.phr.io.KeyListener
+import com.phr.io.MouseListener
 import imgui.ImFontConfig
 import imgui.ImGui
 import imgui.callback.ImStrConsumer
@@ -92,6 +95,10 @@ object ImGuiLayer {
             io.keyShift = io.getKeysDown(GLFW_KEY_LEFT_SHIFT) || io.getKeysDown(GLFW_KEY_RIGHT_SHIFT)
             io.keyAlt = io.getKeysDown(GLFW_KEY_LEFT_ALT) || io.getKeysDown(GLFW_KEY_RIGHT_ALT)
             io.keySuper = io.getKeysDown(GLFW_KEY_LEFT_SUPER) || io.getKeysDown(GLFW_KEY_RIGHT_SUPER)
+
+            if(!io.wantCaptureKeyboard) {
+                KeyListener.keyPressedCallback(windowReference, key,scancode, action, mods);
+            }
         }
 
         glfwSetCharCallback(glfwWindow) { w: Long, c: Int ->
@@ -115,6 +122,10 @@ object ImGuiLayer {
             io.setMouseDown(mouseDown)
             if (!io.wantCaptureMouse && mouseDown[1]) {
                 ImGui.setWindowFocus(null)
+            }
+
+            if (!io.wantCaptureMouse) {
+                MouseListener.mouseButtonCallback(windowReference, button, action, mods);
             }
         }
 

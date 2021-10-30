@@ -1,14 +1,18 @@
-package com.phr.core
+package com.phr.components
 
+import com.phr.core.GameObject
 import imgui.ImGui
 import org.joml.Vector3f
 import org.joml.Vector4f
 import java.lang.reflect.Field
 import java.lang.reflect.Modifier
+import java.util.*
 
-abstract class Component {
+abstract class Component(uuid : UUID = UUID.randomUUID()) {
 
     @Transient lateinit var gameObject: GameObject;
+
+    var uuid = uuid
 
     open fun update(deltaTime : Float) {
 
@@ -81,4 +85,5 @@ abstract class Component {
     open fun start() {
 
     }
+
 }

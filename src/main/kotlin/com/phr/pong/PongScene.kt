@@ -2,7 +2,7 @@ package com.phr.pong
 
 import com.phr.components.SpriteRenderer
 import com.phr.core.GameObject
-import com.phr.core.Scene
+import com.phr.scenes.Scene
 import com.phr.core.Transform
 import com.phr.io.KeyListener
 import com.phr.renderer.Camera

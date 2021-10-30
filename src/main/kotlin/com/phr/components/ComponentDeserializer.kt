@@ -1,7 +1,8 @@
-package com.phr.core
+package com.phr.components
 
 import com.google.gson.*
 import java.lang.reflect.Type
+import java.util.*
 
 class ComponentDeserializer : JsonSerializer<Component>, JsonDeserializer<Component>{
 
@@ -10,9 +11,13 @@ class ComponentDeserializer : JsonSerializer<Component>, JsonDeserializer<Compon
         val jsonObject = jsonElement!!.asJsonObject;
         val type = jsonObject.get("type").asString
 
+
         val element = jsonObject.get("properties");
 
-        return context!!.deserialize(element, Class.forName(type))
+
+        var component : Component =  context!!.deserialize(element, Class.forName(type))
+
+        return component;
 
     }
 

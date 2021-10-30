@@ -1,9 +1,12 @@
-package com.phr.core
+package com.phr.scenes
 
-import com.phr.components.RigidBody
+import com.phr.components.MouseControls
 import com.phr.components.SpriteRenderer
 import com.phr.components.Spritesheet
 import com.phr.configs.Configurations.SPRITE_SHEETS_FOLDER
+import com.phr.core.GameObject
+import com.phr.core.Prefabs
+import com.phr.core.Transform
 import com.phr.io.MouseListener
 import com.phr.renderer.Camera
 import com.phr.util.AssetPool
@@ -16,6 +19,8 @@ class LevelEditorScene : Scene() {
 
     lateinit var gameObject1 : GameObject;
     lateinit var spritesheet : Spritesheet;
+
+    var mouseControls = MouseControls();
 
     private val DECORATIONS_AND_BLOCKS_SPRITESHEETS_PATH = SPRITE_SHEETS_FOLDER + "decorationsAndBlocks.png"
 
@@ -66,6 +71,8 @@ class LevelEditorScene : Scene() {
 
     override fun update(deltaTime: Float) {
 
+        mouseControls.update(deltaTime);
+
         gameObjects.forEach { it.update(deltaTime) }
 
         print(MouseListener.getOrthoX());
@@ -100,7 +107,8 @@ class LevelEditorScene : Scene() {
             buttonId++;
             if (ImGui.imageButton(id, spriteWidth.toFloat(), spriteHeight.toFloat(), textureCoordinates[0].x, textureCoordinates[0].y
                     , textureCoordinates[2].x, textureCoordinates[2].y)) {
-                println("Button " + id + "clicked");
+                val gameObject = Prefabs.generateSpriteObject(it, spriteWidth.toFloat(), spriteHeight.toFloat());
+                mouseControls.pickupObject(gameObject)
             }
             ImGui.popID();
 

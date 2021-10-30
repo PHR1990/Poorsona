@@ -1,9 +1,19 @@
 package com.phr.core
 
-class GameObject (name: String, transform: Transform = Transform(), zIndex: Int = 0) {
+import com.phr.components.Component
+import java.rmi.server.UID
+import java.util.*
+import kotlin.collections.ArrayList
+
+class GameObject (name: String, transform: Transform = Transform(), zIndex: Int = 0, uuid : UUID = UUID.randomUUID()) {
+
+    val uuid = uuid
 
     private var name: String = name;
-    private var components: MutableList<Component> = ArrayList();
+
+    var components: MutableList<Component> = ArrayList()
+            private set;
+
     var transform: Transform = transform;
     var zIndex = zIndex;
 
@@ -45,4 +55,5 @@ class GameObject (name: String, transform: Transform = Transform(), zIndex: Int 
     fun imGui() {
         components.forEach { it.imGui() }
     }
+
 }

@@ -1,7 +1,9 @@
 package com.phr.core
 
 import com.google.gson.*
+import com.phr.components.Component
 import java.lang.reflect.Type
+import java.util.*
 
 class GameObjectDeserializer : JsonDeserializer<GameObject> {
 
@@ -16,9 +18,11 @@ class GameObjectDeserializer : JsonDeserializer<GameObject> {
 
         val zIndex = context!!.deserialize<Int>(jsonObject.get("zIndex"), Int::class.java);
 
-        val gameObject = GameObject(name, transform, zIndex);
+        val uuid = jsonObject.get("uuid").asString;
 
-        components.forEach { it ->
+        val gameObject = GameObject(name, transform, zIndex, UUID.fromString(uuid));
+
+        components.forEach {
             val component = context.deserialize<Component>(it, Component::class.java)
 
             gameObject.addComponent(component);
