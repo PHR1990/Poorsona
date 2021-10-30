@@ -36,7 +36,7 @@ class PongScene : Scene() {
         buildPongBall();
         buildEnemyPaddle();
 
-        enemyPaddleAi = EnemyPaddleAi(enemyPaddle, ball, 5f);
+        enemyPaddleAi = EnemyPaddleAi(enemyPaddle, ball, 3f);
 
         addGameObjectToScene(playerPaddle);
         addGameObjectToScene(ball);
