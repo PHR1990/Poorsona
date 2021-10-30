@@ -6,6 +6,7 @@ import com.phr.pong.PongScene
 import com.phr.scenes.Scene
 import com.phr.io.KeyListener
 import com.phr.io.MouseListener
+import com.phr.renderer.DebugDraw
 import org.lwjgl.glfw.Callbacks.glfwFreeCallbacks
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
@@ -140,10 +141,13 @@ object Window {
 
             glfwPollEvents();
 
+            DebugDraw.beginFrame();
+
             glClearColor(red, green, blue, alpha);
             glClear(GL_COLOR_BUFFER_BIT);
 
             if (deltaTime >= 0) {
+                DebugDraw.draw();
                 currentScene.update(deltaTime);
                 //println("FPS:" + (1.0f)/deltaTime);
             }

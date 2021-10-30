@@ -9,10 +9,12 @@ import com.phr.core.Prefabs
 import com.phr.core.Transform
 import com.phr.io.MouseListener
 import com.phr.renderer.Camera
+import com.phr.renderer.DebugDraw
 import com.phr.util.AssetPool
 import imgui.ImGui
 import imgui.ImVec2
 import org.joml.Vector2f
+import org.joml.Vector3f
 import org.joml.Vector4f
 
 class LevelEditorScene : Scene() {
@@ -30,15 +32,19 @@ class LevelEditorScene : Scene() {
 
         spritesheet = AssetPool.getSpritesheet(DECORATIONS_AND_BLOCKS_SPRITESHEETS_PATH)
 
+        //DebugDraw.addLine2D(Vector2f(0f, 0f), Vector2f(800f,800f), Vector3f(1f,1f,0f), 120)
+
         this.camera = Camera(Vector2f(-100f, -50f));
 
         if (levelLoaded) {
-            this.activeGameObject = gameObjects.get(0)
+            if (gameObjects.size > 0) {
+                this.activeGameObject = gameObjects.get(0)
+            }
 
             return;
         }
 
-        gameObject1 = GameObject("GO1", Transform(Vector2f(200f,100f),  Vector2f(256f, 256f)), -1);
+        /*gameObject1 = GameObject("GO1", Transform(Vector2f(100f,50f),  Vector2f(48f, 48f)), -1);
         val objectSprite = SpriteRenderer();
         gameObject1.addComponent(objectSprite);
         objectSprite.color = Vector4f(1f, 0f, 0f, 1f);
@@ -49,7 +55,7 @@ class LevelEditorScene : Scene() {
         addGameObjectToScene(gameObject1);
 
         this.activeGameObject = gameObject1;
-
+        */
         /*val gameObject2 = GameObject("GO1", Transform(Vector2f(400f,100f),  Vector2f(256f, 256f)), 2);
         gameObject2.addComponent(SpriteRenderer(
             //spritesheet.sprites.get(10))
@@ -57,6 +63,8 @@ class LevelEditorScene : Scene() {
         )
         addGameObjectToScene(gameObject2);
         */
+
+
 
     }
 
@@ -69,15 +77,17 @@ class LevelEditorScene : Scene() {
                 ,16, 16, 81 , 0));
     }
 
+    var t = 0f;
     override fun update(deltaTime: Float) {
 
         mouseControls.update(deltaTime);
 
-        gameObjects.forEach { it.update(deltaTime) }
+        val x = (Math.sin(t.toDouble()) * 200f) + 300f
+        val y = (Math.cos(t.toDouble()) * 200f) + 200f
+        t+=0.05f
+        DebugDraw.addLine2D(Vector2f(300f, 200f), Vector2f(x.toFloat(), y.toFloat()), Vector3f(0f,0f,1f), 10)
 
-        print(MouseListener.getOrthoX());
-        print("  ");
-        println(MouseListener.getOrthoY());
+        gameObjects.forEach { it.update(deltaTime) }
 
         renderer.render();
 
