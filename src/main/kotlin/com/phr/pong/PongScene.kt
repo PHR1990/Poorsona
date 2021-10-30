@@ -1,6 +1,9 @@
-package com.phr.core
+package com.phr.pong
 
 import com.phr.components.SpriteRenderer
+import com.phr.core.GameObject
+import com.phr.core.Scene
+import com.phr.core.Transform
 import com.phr.io.KeyListener
 import com.phr.renderer.Camera
 import org.joml.Vector2f
@@ -21,8 +24,9 @@ class PongScene : Scene() {
     private val xBounds = 1300f;
     private val yBounds = 650f;
 
-    override fun init() {
+    private lateinit var enemyPaddleAi : EnemyPaddleAi;
 
+    override fun init() {
     }
 
     private fun startGame() {
@@ -32,11 +36,14 @@ class PongScene : Scene() {
         buildPongBall();
         buildEnemyPaddle();
 
+        enemyPaddleAi = EnemyPaddleAi(enemyPaddle, ball, 5f);
+
         addGameObjectToScene(playerPaddle);
         addGameObjectToScene(ball);
         addGameObjectToScene(enemyPaddle);
 
         gameStarted = true;
+
     }
 
     private fun buildPlayerPaddle() {
@@ -69,35 +76,37 @@ class PongScene : Scene() {
 
     override fun update(deltaTime: Float) {
 
-        if (KeyListener.keyPressed.get(GLFW.GLFW_KEY_ENTER)) {
+        if (!gameStarted && KeyListener.keyPressed.get(GLFW.GLFW_KEY_ENTER)) {
             startGame();
-        }
-
-        if (!gameStarted) {
+        } else if (!gameStarted) {
             return;
         }
 
-        checkCollisionScreen();
-        checkCollisionWithPaddles();
+        enemyPaddleAi.decideNextMovement();
+
+        checkCollisionBallAgainstScreen();
+        checkCollisionBallAgainstPaddles();
+        processPlayerInput();
 
         if (ballDirectionX != 0f || ballDirectionY != 0f) {
             ball.transform.position.add(ballDirectionX,ballDirectionY);
         }
 
+        super.update(deltaTime);
+    }
+
+    private fun processPlayerInput() {
         if (KeyListener.keyPressed.get(GLFW.GLFW_KEY_W)) {
             playerPaddle.transform.position.add(Vector2f(0f,3f));
         } else if (KeyListener.keyPressed.get(GLFW.GLFW_KEY_S)) {
             playerPaddle.transform.position.add(Vector2f(0f,-3f));
         } else if (KeyListener.keyPressed.get(GLFW.GLFW_KEY_SPACE) && ballDirectionX == 0f && ballDirectionY == 0f) {
-            ballDirectionX+= 8f;
+            ballDirectionX+= 6f;
             ballDirectionY+= 2f;
         }
-
-        super.update(deltaTime);
-
     }
 
-    private fun checkCollisionScreen() {
+    private fun checkCollisionBallAgainstScreen() {
 
         val xBoundsBall = ball.transform.position.x + ball.transform.scale.x;
         val yBoundsBall = ball.transform.position.y + ball.transform.scale.y;
@@ -111,15 +120,13 @@ class PongScene : Scene() {
         }
     }
 
-    private fun checkCollisionWithPaddles() {
+    private fun checkCollisionBallAgainstPaddles() {
 
         if (objectsCollided(ball, playerPaddle)) {
             ballDirectionX *= -1;
         } else if (objectsCollided(ball, enemyPaddle)) {
             ballDirectionX *= -1;
         }
-
-
 
     }
 

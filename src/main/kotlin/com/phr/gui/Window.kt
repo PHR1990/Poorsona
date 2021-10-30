@@ -2,7 +2,7 @@ package com.phr.gui
 
 import com.phr.core.LevelEditorScene
 import com.phr.core.LevelScene
-import com.phr.core.PongScene
+import com.phr.pong.PongScene
 import com.phr.core.Scene
 import com.phr.io.KeyListener
 import com.phr.io.MouseListener
@@ -10,7 +10,6 @@ import org.lwjgl.glfw.Callbacks.glfwFreeCallbacks
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL
-import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11.*
 import org.lwjgl.system.MemoryUtil
 
