@@ -65,9 +65,9 @@ object Window {
 
         changeScene(0);
 
-        if (imGuiEnabled) {
-            imGuiLayer.initializeImGui(windowReference);
-        }
+        //if (imGuiEnabled) {
+        imGuiLayer.initializeImGui(windowReference);
+        //}
 
         gameLoop()
 
@@ -149,7 +149,6 @@ object Window {
             if (deltaTime >= 0) {
                 DebugDraw.draw();
                 currentScene.update(deltaTime);
-                //println("FPS:" + (1.0f)/deltaTime);
             }
 
             if (imGuiEnabled) {

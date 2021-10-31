@@ -1,8 +1,11 @@
 package com.phr.scenes
 
+import com.phr.components.GridLines
 import com.phr.components.MouseControls
 import com.phr.components.SpriteRenderer
 import com.phr.components.Spritesheet
+import com.phr.configs.Configurations.GRID_HEIGHT
+import com.phr.configs.Configurations.GRID_WIDTH
 import com.phr.configs.Configurations.SPRITE_SHEETS_FOLDER
 import com.phr.core.GameObject
 import com.phr.core.Prefabs
@@ -22,11 +25,15 @@ class LevelEditorScene : Scene() {
     lateinit var gameObject1 : GameObject;
     lateinit var spritesheet : Spritesheet;
 
-    var mouseControls = MouseControls();
+    var levelEditorTools = GameObject("Tools", Transform());
+    //var mouseControls = MouseControls();
 
     private val DECORATIONS_AND_BLOCKS_SPRITESHEETS_PATH = SPRITE_SHEETS_FOLDER + "decorationsAndBlocks.png"
 
     override fun init() {
+
+        levelEditorTools.addComponent(MouseControls())
+        levelEditorTools.addComponent(GridLines())
 
         loadResources();
 
@@ -77,15 +84,10 @@ class LevelEditorScene : Scene() {
                 ,16, 16, 81 , 0));
     }
 
-    var t = 0f;
+
     override fun update(deltaTime: Float) {
 
-        mouseControls.update(deltaTime);
-
-        val x = (Math.sin(t.toDouble()) * 200f) + 300f
-        val y = (Math.cos(t.toDouble()) * 200f) + 200f
-        t+=0.05f
-        DebugDraw.addLine2D(Vector2f(300f, 200f), Vector2f(x.toFloat(), y.toFloat()), Vector3f(0f,0f,1f), 10)
+        levelEditorTools.update(deltaTime);
 
         gameObjects.forEach { it.update(deltaTime) }
 
@@ -107,18 +109,18 @@ class LevelEditorScene : Scene() {
 
         var buttonId = 0;
         spritesheet.sprites.forEach{
-            val spriteWidth = it.width;
-            val spriteHeight = it.height;
+            val spriteWidth = it.width * 3;
+            val spriteHeight = it.height * 3;
             val id = it.texture?.textureId ?: -1;
 
             val textureCoordinates = it.textureCoordinates;
 
             ImGui.pushID(buttonId);
             buttonId++;
-            if (ImGui.imageButton(id, spriteWidth.toFloat(), spriteHeight.toFloat(), textureCoordinates[0].x, textureCoordinates[0].y
-                    , textureCoordinates[2].x, textureCoordinates[2].y)) {
-                val gameObject = Prefabs.generateSpriteObject(it, spriteWidth.toFloat(), spriteHeight.toFloat());
-                mouseControls.pickupObject(gameObject)
+            if (ImGui.imageButton(id, spriteWidth.toFloat(), spriteHeight.toFloat(), textureCoordinates[2].x, textureCoordinates[0].y
+                    , textureCoordinates[0].x, textureCoordinates[2].y)) {
+                val gameObject = Prefabs.generateSpriteObject(it, GRID_WIDTH.toFloat(), GRID_HEIGHT.toFloat());
+                levelEditorTools.getComponent(MouseControls::class.java)!!.pickupObject(gameObject)
             }
             ImGui.popID();
 

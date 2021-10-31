@@ -37,7 +37,7 @@ object DebugDraw {
         glEnableVertexAttribArray(1);
 
         // Set line width
-        glLineWidth(4f)
+        glLineWidth(2f)
     }
 
     fun beginFrame() {
@@ -100,9 +100,12 @@ object DebugDraw {
 
     fun addLine2D(from : Vector2f, to : Vector2f) {
 
-        addLine2D(from, to, Vector3f(0f, 1f,0f ),300)
+        addLine2D(from, to, Vector3f(0f, 1f,0f ),2)
     }
 
+    fun addLine2D(from : Vector2f, to : Vector2f, color: Vector3f) {
+        addLine2D(from, to,color, 2)
+    }
     fun addLine2D(from : Vector2f, to : Vector2f, color: Vector3f, lifetime : Int) {
         if (lines.size > MAX_LINES) return;
         lines.add(Line2D(from, to, color, lifetime));
